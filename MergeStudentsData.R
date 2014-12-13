@@ -19,6 +19,7 @@ disco <- gsub("\\","/",disco, fixed=TRUE) #mudar o \\ para /
 pastaUC <- paste(disco,"Dropbox/_Aulas/14-15/1º Ciclo/EM I 5915/",sep="")
 pastaDados <- paste (pastaUC, "Aval/Recolha de dados/Dados/",sep="")
 pastaFicheiros <- paste(pastaDados, "Ficheiros/", sep="")
+pastaProjeto <- paste(disco, "Dropbox/_Inv/WorkSpace/R/R_Projects/Activism/", sep="")
 
 #### Obter a lista de ficheiros
 
@@ -39,7 +40,9 @@ wb <- read.xlsx(nomesFicheiros[1], 1, endRow=26) #ler a primeira folha do primei
 
         #variáveis e vetores operacionais
         vars <- names(wb) #nomes das variáveis
-        outputfile <- c("DataActivism.xlsx")
+        outputFile <- paste(pastaDados,"TotalData.RData", sep="")
+        outputFile2 <- paste(pastaProjeto,"DataActivism.RData", sep="")
+        outputFile3 <- paste(pastaDados,"DataOther.RData", sep="")
         numeroVoltas <- seq(from=2, to=numeroAlunos) #ficheiros excel restantes
 
 for(i in numeroVoltas) {
@@ -49,4 +52,10 @@ for(i in numeroVoltas) {
         print(names(wb))
 }
 rm(wb2)
+
+##sort by Entrevistador
+
+save(wb, file=outputFile)
+
+##split files
 

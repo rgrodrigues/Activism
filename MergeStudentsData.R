@@ -74,7 +74,7 @@ wb$F3 <- factor(wb$F3, levels=c(1,2,3,4), labels=niveisF3)
 wb$F4 <- factor(wb$F4, levels=c(1,2,3,4,5,6,7,8), labels=niveisF4)
 wb$F5 <- factor(wb$F5, levels=c(1,2,3), labels=niveisF5)
 
-####salvar ficheiro total
+####salvar ficheiro total####
 save(wb, file=outputFile)
 
 

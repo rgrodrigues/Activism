@@ -69,16 +69,15 @@ wb <- wb[order(wb$Entrevistador, rowNames=FALSE),]
      niveisF1 <- c("Masculino","Feminino")
      niveisF3 <- c("Solteira/o","Casada/o - União de facto","Divorciada/o - 
                    Separada/o", "Viúva/o")
-     niveisF4 <- c(“4º Ano”,“6º Ano”,“9º Ano”,“12º Ano”,“Barcharlato”,
-                   “Licenciatura”,“Mestrado”,“Doutoramento”)
+     niveisF4 <- c("4º Ano","6º Ano","9º Ano","12º Ano","Barcharlato","Licenciatura","Mestrado","Doutoramento")
      niveisF5 <- c("Grande cidade", "Cidade Pequena", "Área rural")
      
      niveisNS <- c("Não","Sim")
      
      wb$F1 <- factor(wb$F1, levels=c(1,2), labels=niveisF1)
-     wb$F3 <- factor(wb$F3, levels=c(1,2,3,4), labels=niveisF3)
-     wb$F4 <- factor(wb$F4, levels=c(1,2,3,4,5,6,7,8), labels=niveisF4)
-     wb$F5 <- factor(wb$F5, levels=c(1,2,3), labels=niveisF5)
+     wb$F3 <- factor(wb$F3, levels=seq(1,4), labels=niveisF3)
+     wb$F4 <- factor(wb$F4, levels=seq(1,8), labels=niveisF4)
+     wb$F5 <- factor(wb$F5, levels=seq(1,3), labels=niveisF5)
      wb$Q8 <- factor(wb$Q8, levels=c(0,1), labels=niveisNS)
 
      ##Inverter variáveis Q6 e Q7
@@ -86,6 +85,32 @@ wb <- wb[order(wb$Entrevistador, rowNames=FALSE),]
      wb$Q6 <- 8-wb$Q6
      wb$Q7 <- 8-wb$Q7
 
+     ##Limpeza do grupo de variáveis Q10 a Q14 (tem alguns x em vez de números)
+          
+     wb$Q10 <- as.numeric(wb$Q10)
+     wb$Q11 <- as.numeric(wb$Q11)
+     wb$Q12 <- as.numeric(wb$Q12)
+     wb$Q13 <- as.numeric(wb$Q13)
+     wb$Q14 <- as.numeric(wb$Q14)
+
+     ##Fatores Q26 a Q29
+     #Mudei no excel as palavras não e sim por números: AndreiaBizarro BrunoDuarte DanielSilva PauloSardinha
+          
+     wb$Q26 <- factor(wb$Q26, levels=c(0,1), labels=niveisNS)
+     wb$Q27 <- factor(wb$Q27, levels=c(0,1), labels=niveisNS)
+     wb$Q28 <- factor(wb$Q28, levels=c(0,1), labels=niveisNS)
+     wb$Q29 <- factor(wb$Q29, levels=c(0,1), labels=niveisNS)
+
+
+     ##carateres especias em LocalEntrevista
+     
+     levels(wb$LocalEntrevista) <- gsub("Ã§", "ç", levels(wb$LocalEntrevista),fixed=TRUE)
+     levels(wb$LocalEntrevista) <- gsub("Ã£", "ã", levels(wb$LocalEntrevista),fixed=TRUE)
+     levels(wb$LocalEntrevista) <- gsub("Ã³", "ó", levels(wb$LocalEntrevista),fixed=TRUE)
+     levels(wb$LocalEntrevista) <- gsub("Ã©", "é", levels(wb$LocalEntrevista),fixed=TRUE)
+     levels(wb$LocalEntrevista) <- gsub("Ãº", "ú", levels(wb$LocalEntrevista),fixed=TRUE)
+
+          
 
 ####salvar ficheiro total
 save(wb, file=outputFile)

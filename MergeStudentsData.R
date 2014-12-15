@@ -39,11 +39,12 @@ setwd(pastaFicheiros)
 wb <- read.xlsx(nomesFicheiros[1], 1, endRow=26) #ler a primeira folha do primeiro livro excel
 
         #variáveis e vetores operacionais
-        vars <- names(wb) #nomes das variáveis
-        outputFile <- paste(pastaDados,"TotalData.RData", sep="")
-        outputFile2 <- paste(pastaProjeto,"DataActivism.RData", sep="")
-        outputFile3 <- paste(pastaDados,"DataOther.RData", sep="")
-        numeroVoltas <- seq(from=2, to=numeroAlunos) #ficheiros excel restantes
+          vars <- names(wb) #nomes das variáveis
+          outputFile <- paste(pastaDados,"TotalData.RData", sep="")
+          ouputfileXlx <- paste(pastaDados,"DadosTotais.xlsx",sep="")
+          outputFile2 <- paste(pastaProjeto,"DataActivism.RData", sep="")
+          outputFile3 <- paste(pastaDados,"DataOther.RData", sep="")
+          numeroVoltas <- seq(from=2, to=numeroAlunos) #ficheiros excel restantes
 
 for(i in numeroVoltas) {
         wb2 <- read.xlsx(nomesFicheiros[i], 1, startRow=1, endRow=26)
@@ -54,7 +55,7 @@ for(i in numeroVoltas) {
 rm(wb2)
 
 ##sort by Entrevistador
-wb <- wb[order(wb$Entrevistador, rowNames=FALSE),]
+wb <- wb[order(wb$Entrevistador),]
 
 ####Manipulação de variáveis
 
@@ -110,13 +111,18 @@ wb <- wb[order(wb$Entrevistador, rowNames=FALSE),]
      levels(wb$LocalEntrevista) <- gsub("Ã©", "é", levels(wb$LocalEntrevista),fixed=TRUE)
      levels(wb$LocalEntrevista) <- gsub("Ãº", "ú", levels(wb$LocalEntrevista),fixed=TRUE)
 
-          
+
+
+####Validar valores das variáveis
+
+
+
 
 ####salvar ficheiro total
 save(wb, file=outputFile)
-
+write.xlsx(wb,file=ouputfileXlx)
 
 
 ##split files
 
-varsClass <- vars[47:53]
+varsClass <- vars[,(47:53)]

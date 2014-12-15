@@ -54,8 +54,31 @@ for(i in numeroVoltas) {
 rm(wb2)
 
 ##sort by Entrevistador
+wb <- wb[order(wb$Entrevistador, rowNames=FALSE),]
 
+##Inserir ID único
+nobs <- nrow(wb) #númerototal de observações
+id <- seq(1:nobs) #criação variável id
+wb <- cbind(id,wb) #inserir variável id à esquerda das varáveis existentes
+
+##incluir níveis dos fatores (F1 a F5)
+niveisF1 <- c("Masculino","Feminino")
+niveisF3 <- c("Solteira/o","Casada/o - União de facto","Divorciada/o - 
+              Separada/o", "Viúva/o")
+niveisF4 <- c(“4º Ano”,“6º Ano”,“9º Ano”,“12º Ano”,“Barcharlato”,
+              “Licenciatura”,“Mestrado”,“Doutoramento”)
+niveisF5 <- c("Grande cidade", "Cidade Pequena", "Área rural")
+
+wb$F1 <- factor(wb$F1, levels=c(1,2), labels=niveisF1)
+wb$F3 <- factor(wb$F3, levels=c(1,2,3,4), labels=niveisF3)
+wb$F4 <- factor(wb$F4, levels=c(1,2,3,4,5,6,7,8), labels=niveisF4)
+wb$F5 <- factor(wb$F5, levels=c(1,2,3), labels=niveisF5)
+
+##salvar ficheiro total
 save(wb, file=outputFile)
+
+
 
 ##split files
 
+varsClass <- vars[47:53]

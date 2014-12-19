@@ -112,6 +112,17 @@ wb <- wb[order(wb$Entrevistador),]
      levels(wb$LocalEntrevista) <- gsub("Ãº", "ú", levels(wb$LocalEntrevista),fixed=TRUE)
 
 
+     ##mudar nomes às variáveis
+     
+     names(wb)[c(48,49,50,51,52)] <- c("sex","age","civil","education","live")
+     names(wb)[c(5,6,7,8,9,10,11)] <- c("per01","per02","per03","per04","per05",
+                                        "per06","per07")
+     names(wb)[c(12,13)] <- c("member.volunteer","which.org")
+     names(wb)[c(14,15,16,17,18,19)] <- c("reason01","reason02","reason03",
+                                          "reason04","reason.other","reason.other.which")
+     names(wb)[c(20,21,22,23,24,25,26,27,28,29)] <- c("ea01","ea02","ea03",
+                                                      "ea04","ea05","ea06","ea07","ea08","ea09","ea10")
+      
 
 ####Validar valores das variáveis
 
@@ -125,4 +136,13 @@ write.xlsx(wb,file=ouputfileXlx)
 
 ##split files
 
-varsClass <- vars[,(47:53)]
+Activism <- subset(wb, select=c(id,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,
+                                Q14,Q15,Q16,Q17,Q18,Q19,Q20,Q21,Q22,Q23,Q24,Q25,
+                                Q26,Q27,Q28,Q29,F1,F2,F3,F4,F5,))
+
+
+save(Activism, file=outputFile2)
+
+eohappy <- subset(wb, select=c(id,Q30,Q31,Q32,Q33,Q34,Q35,Q36,Q37,Q38,Q39,Q40,
+                               Q41,Q42,Q43,F1,F2,F3,F4,F5))
+save(eohappy, file=outputFile3)

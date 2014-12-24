@@ -64,6 +64,7 @@ wb <- wb[order(wb$Entrevistador),]
      nobs <- nrow(wb) #númerototal de observações
      id <- seq(1:nobs) #criação variável id
      wb <- cbind(id,wb) #inserir variável id à esquerda das varáveis existentes
+     nvars <- ncol(wb) #número total de variáveis
 
      ##incluir níveis dos fatores (F1 a F5) e Q8
 
@@ -81,10 +82,11 @@ wb <- wb[order(wb$Entrevistador),]
      wb$F5 <- factor(wb$F5, levels=seq(1,3), labels=niveisF5)
      wb$Q8 <- factor(wb$Q8, levels=c(0,1), labels=niveisNS)
 
-     ##Inverter variáveis Q6 e Q7
+     ##Inverter variáveis Q6 e Q7 e Q43
 
      wb$Q6 <- 8-wb$Q6
      wb$Q7 <- 8-wb$Q7
+     wb$Q43 <- with(wb, 6-Q43)
 
      ##Limpeza do grupo de variáveis Q10 a Q14 (tem alguns x em vez de números)
           
@@ -117,17 +119,55 @@ wb <- wb[order(wb$Entrevistador),]
      names(wb)[c(48,49,50,51,52)] <- c("sex","age","civil","education","live")
      names(wb)[c(5,6,7,8,9,10,11)] <- c("per01","per02","per03","per04","per05",
                                         "per06","per07")
-     names(wb)[c(12,13)] <- c("member.volunteer","which.org")
-     names(wb)[c(14,15,16,17,18,19)] <- c("reason01","reason02","reason03",
-                                          "reason04","reason.other","reason.other.which")
+     names(wb)[c(12,13)] <- c("egm","org")
+     names(wb)[c(14,15,16,17,18,19)] <- c("q10.reason01","q11.reason02","q12.reason03",
+                                          "q13.reason04","q14.reason.other","q15.reason.which")
      names(wb)[c(20,21,22,23,24,25,26,27,28,29)] <- c("ea01","ea02","ea03",
-                                                      "ea04","ea05","ea06","ea07","ea08","ea09","ea10")
-      
+                                                      "ea04","ea05","ea06",
+                                                      "ea07","ea08","ea09","ea10")
+     names(wb)[c(30,31,32,33)] <- c("q26.intention01","q27.intention02","q28.intention03",
+                               "q29.intention04")
+
+     names(wb)[c(34,35,36,37,38,39,40,41,42,43)] <- c("q30.risk01","q31.risk02",
+                                                 "q32.risk03","q33.innov01","q34.innov02","q35.innov03","q36.innov04",
+                                                 "q37.proact01","q38.proact02","q39.proact03")
+     names(wb)[c(44,45,46,47)] <- c("happy01","happy02","happy03","happy04")
+
+     ##Criar médias construtos
+          #per
+     wb$per <- rowMeans(subset(wb, select = c(5,11)), na.rm = TRUE)
+     
+
+          #ea
+     wb$ea <- rowMeans(subset(wb, select = c(20,29)), na.rm = TRUE)
 
 ####Validar valores das variáveis
+     
+#Validfunc <- function(x){
+#     l <- lapply(df, function(x) which(!x %in% seq_len(5)))
+#     Filter(Negate(function(...) length(...) == 0), l)
+#}
+#Validfunc7 <- function(x){
+#     l <- lapply(df, function(x) which(!x %in% seq_len(7)))
+#     Filter(Negate(function(...) length(...) == 0), l)
+#}
 
+#likert7 <- subset(wb, select=c(ea01,ea02,ea03,ea04,ea05,ea06,ea07,ea08,
+                              ea09,ea10,per01,per02,per03,per04,per05,per06,per07))
 
+#likert <- subset(wb, select=c(q30.risk01,q31.risk02,q32.risk03,q33.innov01,q34.innov02,q35.innov03,
+                              q36.innov04,q37.proact01,q38.proact02,q39.proact03))
 
+#ValidLikert7(likert7)
+#ValidLikert(likert)
+
+#Validfunc7(likert7)
+#Validfunc(likert)
+
+lapply(likert, function(x) which(!x %in% seq_len(5)))
+lapply(likert7, function(x) which(!x %in% seq_len(7)))
+
+#indx <- which(likert >5 | likert < 1,arr.ind=TRUE); setNames(indx[,1], names(likert)[indx[,2]])
 
 ####salvar ficheiro total
 save(wb, file=outputFile)
@@ -136,13 +176,16 @@ write.xlsx(wb,file=ouputfileXlx)
 
 ##split files
 
-Activism <- subset(wb, select=c(id,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,
-                                Q14,Q15,Q16,Q17,Q18,Q19,Q20,Q21,Q22,Q23,Q24,Q25,
-                                Q26,Q27,Q28,Q29,F1,F2,F3,F4,F5,))
+Activism <- subset(wb, select=c(id,per,ea,egm,ea01,ea02,ea03,ea04,ea05,ea06,ea07,ea08,
+                                ea09,ea10,org,per01,per02,per03,per04,per05,per06,per07,
+                                q10.reason01,q11.reason02,q12.reason03,q13.reason04,
+                                q14.reason.other,q15.reason.which,q26.intention01,
+                                q27.intention02,q28.intention03,q29.intention04,
+                                sex,age,civil,education,live))
 
 
 save(Activism, file=outputFile2)
 
-eohappy <- subset(wb, select=c(id,Q30,Q31,Q32,Q33,Q34,Q35,Q36,Q37,Q38,Q39,Q40,
-                               Q41,Q42,Q43,F1,F2,F3,F4,F5))
-save(eohappy, file=outputFile3)
+eohappy <- subset(wb, select=c(id,q30.risk01,q31.risk02,q32.risk03,q33.innov01,q34.innov02,q35.innov03,
+                               q36.innov04,q37.proact01,q38.proact02,q39.proact03,sex,age,civil,education,live))
+save(eohappy, file=outputFile3) #gravado na subpasta da UC
